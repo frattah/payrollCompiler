@@ -14,12 +14,23 @@ from datetime import datetime
 
 ######################################################################################################################
 #                                                                                                                    #
+#                                                 PROFILES                                                           #
+#                                                                                                                    #
+######################################################################################################################
+
+MACCHINISTA = ["attendances", "vacancies","0131","0169","0170","0412","holidays","0421","0457","0547","0790","0791","0792","0964","0965","0966","0987","0988","0991","0992","0AD0","0AD1"]
+MANUTENZIONE = ["attendances", "vacancies","tickets","0131","holidays","0412","0457","0470","0482","0496","0584","0686","0687","0423"]
+
+######################################################################################################################
+#                                                                                                                    #
 #                                               PARAMETERS                                                           #
 #                                                                                                                    #
 ######################################################################################################################
 
-WRITING_PARAMETERS = ["attendances", "vacancies","tickets","0131","holidays","0421","0457","0470","0482","0496","0584","0686","0687","0423"]
-CODES = ["0131","0200","0202","0203","0205","0206","0207","0210","0293","0299","0352","0353","0366","0421","0423","0457","0470","0482","0496","0584","0686","0687"]
+WRITING_PARAMETERS = MANUTENZIONE
+CODES = ["0131","0169","0170","0200","0202","0203","0205","0206","0207","0210","0293","0299","0352","0353",
+        "0366","0412","0421","0423","0457","0470","0482","0496","0547","0584","0686","0687","0790","0791",
+        "0792","0964","0965","0966","0987","0988","0991","0992","0AD0","0AD1"]
 HOLIDAYS = ["0200","0202","0203","0205","0206","0207","0210","0352","0353","0366"]
 TICKETS = ["0293","0299"]
 MONTHS = {
@@ -36,8 +47,8 @@ MONTHS = {
     "Novembre": 11,
     "Dicembre": 12
 }
-X_STARTING_CELL = 5
-Y_STARTING_CELL = 8
+Y_STARTING_CELL = 5
+X_STARTING_CELL = 8
 FIRST_YEAR = 2007
 excel_path = sys.argv[1]
 MAX_WORKERS = 8 
@@ -84,18 +95,18 @@ class Payroll:
 
     def write_on_spreadsheet(self, sheet):
         years_elapsed = self.year - FIRST_YEAR
-        cumulative_offset = (years_elapsed // 2) * 2
+        cumulative_offset = (years_elapsed // 2) * 2 # Use it for printable excel version
 
         for i, pay_element in enumerate(WRITING_PARAMETERS):
             row_index = (
-                X_STARTING_CELL + 
-                (self.year - FIRST_YEAR) * (len(WRITING_PARAMETERS) + 7) + 
-                cumulative_offset + i
+                Y_STARTING_CELL + 
+                (self.year - FIRST_YEAR) * (len(WRITING_PARAMETERS) + 8) + 
+                i
             )
  
             sheet.cell(
                 row=row_index, 
-                column=Y_STARTING_CELL + MONTHS[self.month], 
+                column=X_STARTING_CELL + MONTHS[self.month], 
                 value=self.pay_elements[pay_element] if pay_element in self.pay_elements else 0.00
             )
 
